@@ -4,11 +4,12 @@ import ShowHourly from './ShowHourly';
 import ShowDailyList from './ShowDailyList';
 import { convertUTC } from '../helper_functions/helpers';
 
-class showWeather extends React.Component {
 
-    renderCurrent() {
-        const {city, state, zip} = this.props;
-        const {current} = this.props.allWeather;
+const showWeather = (props) => {
+
+    const renderCurrent = () => {
+        const {city, state, zip} = props;
+        const {current} = props.allWeather;
         const icon = "http://openweathermap.org/img/w/"+ current.weather[0].icon +".png";
         const day = convertUTC(`${current.dt}`, 'weekday', 'long');
         const sunrise = convertUTC(`${current.sunrise}`, 'time', 'short');
@@ -27,40 +28,39 @@ class showWeather extends React.Component {
                 </div>
             </section>
         )
-    }
+    };
 
-    render() {
-        if (this.props.error) {
-            return (
-                <div className="section">
-                    <h2>Forecast</h2>
-                    <div className="error centerDiv">There is a problem with the ZIP code entered, please try again</div>
-                </div>
-            )
-        } else if (!this.props.allWeather.current) {
-            return (
-                <div className="section">
-                    <h2>Forecast</h2>
-                    <div className="centerDiv">Waiting for ZIP code</div>
-                </div>
-            )
-        }
-        return(
+    if (props.error) {
+        return (
+            <div className="section">
+                <h2>Forecast</h2>
+                <div className="error centerDiv">There is a problem with the ZIP code entered, please try again</div>
+            </div>
+        )
+    } else if (!props.allWeather.current) {
+        return (
+            <div className="section">
+                <h2>Forecast</h2>
+                <div className="centerDiv">Waiting for ZIP code</div>
+            </div>
+        )
+    } else {
+        return (
             <div className="section">
                 <h2>Forecast</h2>
                 <div className="mainCard">
-                    {this.renderCurrent()}
+                    {renderCurrent()}
                     <ShowHourly
-                        hourlyWeather={this.props.allWeather.hourly}
+                        hourlyWeather={props.allWeather.hourly}
                     />
                     <ShowDailyList
-                        dailyWeather={this.props.allWeather.daily}
-                        clickedADay={this.props.clickedADay}
+                        dailyWeather={props.allWeather.daily}
+                        clickedADay={props.clickedADay}
                     />
                 </div>
             </div>
         )
     }
-}
+};
 
 export default showWeather;

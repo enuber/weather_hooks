@@ -1,36 +1,34 @@
 import './ShowDay.css';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import history from '../../history';
 import { convertUTC } from '../helper_functions/helpers';
 
-class showDay extends React.Component {
+const ShowDay = (props) => {
 
     //makes sure that if there is no data, it pushes to home so that there are no errors thrown.
-    componentDidMount() {
-        if(!this.props.dayWeather.dt) {
+    useEffect(()=>{
+        if(!props.dayWeather.dt) {
             history.push('/');
         }
-    }
+    }, [props.dayWeather.dt]);
 
     //takes in the wind direction as an angle and spits out the wind direction.
-    degToCompass(num) {
+    const degToCompass = num => {
         const val = Math.floor((num / 22.5) + 0.5);
         const arr = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
         return arr[(val % 16)];
-    }
+    };
 
-    renderChosenDay() {
-        console.log(this.props);
-        if (this.props.dayWeather.dt) {
-            const {city, state, zip, dayWeather} = this.props;
+    const renderChosenDay = () => {
+        if (props.dayWeather.dt) {
+            const {city, state, zip, dayWeather} = props;
             const icon = "http://openweathermap.org/img/w/" + dayWeather.weather[0].icon + ".png";
             const day = convertUTC(`${dayWeather.dt}`, 'weekday', 'long');
             const sunrise = convertUTC(`${dayWeather.sunrise}`, 'time', 'short');
             const sunset = convertUTC(`${dayWeather.sunset}`, 'time', 'short');
-            const windDirection = this.degToCompass(dayWeather.wind_deg);
+            const windDirection = degToCompass(dayWeather.wind_deg);
             const windInformation = `${windDirection} ${Math.round(dayWeather.wind_speed)}mph`;
-            console.log(windInformation);
             return (
                 <section className="currentDate" key={dayWeather.dt}>
                     <div className="column50">
@@ -61,18 +59,16 @@ class showDay extends React.Component {
             )
         }
     }
-
-    render() {
-        return(
-            <div className="section">
-                <h2>Forecast</h2>
-                <div className="dayContainer">
-                    {this.renderChosenDay()}
-                </div>
-                <Link to={`/`} className="button">Back To Current Weather</Link>
+    return(
+        <div className="section">
+            <h2>Forecast</h2>
+            <div className="dayContainer">
+                {renderChosenDay()}
             </div>
-        )
-    }
+            <Link to={`/`} className="button">Back To Current Weather</Link>
+        </div>
+    )
+
 };
 
-export default showDay;
+export default ShowDay;

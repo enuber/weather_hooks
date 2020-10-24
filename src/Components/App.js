@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import { Router, Route, Switch } from 'react-router-dom';
 import history from '../history';
 import Geocode from 'react-geocode';
@@ -17,11 +17,11 @@ const App = () => {
     const [city, setCity] = useState(null);
     const [state, setStateOfUSA] = useState(null);
     const [zip, setZip] = useState(null);
-    const [error, setError] = useState(false);
+    const [errorCur, setError] = useState(false);
 
     //uses a call to google api to get lat and long from zipcode. Need these to properly make the call to weather api
     const getLocation = async zipcode => {
-        if (!error) {
+        if (!errorCur) {
             Geocode.setApiKey(Keys.keys[0].google);
             await Geocode.fromAddress(zipcode).then(
                 response => {
@@ -42,27 +42,50 @@ const App = () => {
         }
     };
 
+    useEffect(()=> {
+        const getWeather = async() => {
+            if (lat !== null && lng !== null) {
+                const response = await
+                openweatherOnecall.get('', {
+                    params: {
+                        lat: lat,
+                        lon: lng,
+                        exclude: "minutely",
+                        units: "imperial",
+                        appid: Keys.keys[0].openweather
+                    }
+                });
+                setCurrentWeather(response.data);
+            }
+        };
+        getWeather();
+    }, [lat, lng]);
+
+
     //this happens after the getLocation finishes making it's call so we can use the lat and lng to get weather data
-    const getWeather = async () => {
-        if (!error) {
-            const response = await openweatherOnecall.get('', {
-                params: {
-                    lat: lat,
-                    lon: lng,
-                    exclude: "minutely",
-                    units: "imperial",
-                    appid: Keys.keys[0].openweather
-                }
-            });
-            setCurrentWeather(response.data);
-        }
-    };
+    // const getWeather = async () => {
+    //     if (!errorCur) {
+    //         debugger;
+    //         const response = await openweatherOnecall.get('', {
+    //             params: {
+    //                 lat: latCur,
+    //                 lon: lngCur,
+    //                 exclude: "minutely",
+    //                 units: "imperial",
+    //                 appid: Keys.keys[0].openweather
+    //             }
+    //         });
+    //         debugger;
+    //         setCurrentWeather(response.data);
+    //     }
+    //     debugger;
+    //
+    // };
 
     const onSearchSubmit = async (zipcode, error) => {
         history.push('/');
         await setError(error);
         await getLocation(zipcode);
-        await getWeather(zipcode);
     };
 
     const onDayClick = (dayClicked, day) => {
@@ -82,7 +105,7 @@ const App = () => {
                             city={city}
                             state={state}
                             zip={zip}
-                            error={error}
+                            error={errorCur}
                             clickedADay={onDayClick}
                         />}
                     />
@@ -92,7 +115,7 @@ const App = () => {
                             city={city}
                             state={state}
                             zip={zip}
-                            error={error}
+                            error={errorCur}
                             clickedADay={onDayClick}
                         />}
                     />
