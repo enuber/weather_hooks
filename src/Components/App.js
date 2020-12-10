@@ -62,35 +62,15 @@ const App = () => {
     }, [lat, lng]);
 
 
-    //this happens after the getLocation finishes making it's call so we can use the lat and lng to get weather data
-    // const getWeather = async () => {
-    //     if (!errorCur) {
-    //         debugger;
-    //         const response = await openweatherOnecall.get('', {
-    //             params: {
-    //                 lat: latCur,
-    //                 lon: lngCur,
-    //                 exclude: "minutely",
-    //                 units: "imperial",
-    //                 appid: Keys.keys[0].openweather
-    //             }
-    //         });
-    //         debugger;
-    //         setCurrentWeather(response.data);
-    //     }
-    //     debugger;
-    //
-    // };
-
     const onSearchSubmit = async (zipcode, error) => {
-        history.push('/');
+        history.push('/apps/weather_hooks/');
         await setError(error);
         await getLocation(zipcode);
     };
 
     const onDayClick = (dayClicked, day) => {
         setdDayClickedWeather(dayClicked);
-        history.push(`/${day}`);
+        history.push(`/apps/weather_hooks/${day}`);
     };
 
     return (
@@ -99,7 +79,7 @@ const App = () => {
                 <Header/>
                 <ZipcodeInput onSubmit={onSearchSubmit}/>
                 <Switch>
-                    <Route path="/" exact render={() =>
+                    <Route path="/apps/weather_hooks/" exact render={() =>
                         <ShowWeather
                             allWeather={currentWeather}
                             city={city}
@@ -109,7 +89,7 @@ const App = () => {
                             clickedADay={onDayClick}
                         />}
                     />
-                    <Route path="/:day" render={() =>
+                    <Route path="/apps/weather_hooks/:day" render={() =>
                         <ShowDay
                             dayWeather={dayClickedWeather}
                             city={city}

@@ -9,7 +9,7 @@ const ShowDay = (props) => {
     //makes sure that if there is no data, it pushes to home so that there are no errors thrown.
     useEffect(()=>{
         if(!props.dayWeather.dt) {
-            history.push('/');
+            history.push('/apps/weather_hooks/');
         }
     }, [props.dayWeather.dt]);
 
@@ -65,7 +65,7 @@ const ShowDay = (props) => {
             <div className="dayContainer">
                 {renderChosenDay()}
             </div>
-            <Link to={`/`} className="button">Back To Current Weather</Link>
+            <Link to={`/apps/weather_hooks/`} className="button">Back To Current Weather</Link>
         </div>
     )
 
