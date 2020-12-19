@@ -1,6 +1,6 @@
 {
   "name": "weather_hooks",
-  "homepage": "https://eriknuber.us/apps/weather_hooks/",
+  "homepage": ".",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

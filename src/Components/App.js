@@ -63,14 +63,14 @@ const App = () => {
 
 
     const onSearchSubmit = async (zipcode, error) => {
-        history.push('/apps/weather_hooks/');
+        history.push('/');
         await setError(error);
         await getLocation(zipcode);
     };
 
     const onDayClick = (dayClicked, day) => {
         setdDayClickedWeather(dayClicked);
-        history.push(`/apps/weather_hooks/${day}`);
+        history.push(`/${day}`);
     };
 
     return (
@@ -79,7 +79,7 @@ const App = () => {
                 <Header/>
                 <ZipcodeInput onSubmit={onSearchSubmit}/>
                 <Switch>
-                    <Route path="/apps/weather_hooks/" exact render={() =>
+                    <Route path="/" exact render={() =>
                         <ShowWeather
                             allWeather={currentWeather}
                             city={city}
@@ -89,7 +89,7 @@ const App = () => {
                             clickedADay={onDayClick}
                         />}
                     />
-                    <Route path="/apps/weather_hooks/:day" render={() =>
+                    <Route path="/:day" render={() =>
                         <ShowDay
                             dayWeather={dayClickedWeather}
                             city={city}
